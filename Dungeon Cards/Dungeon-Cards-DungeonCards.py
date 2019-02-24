@@ -91,14 +91,23 @@ class Board:
             monster_location = [hero_location[0] - 1, hero_location[1]]
         if side == 'right':
             monster_location = [hero_location[0] + 1, hero_location[1]]
-        damage = self.board[monster_location[0]][monster_location[1]]["HP"] - \
-                 self.board[hero_location[0]][hero_location[1]]["weapon"]
-        if damage >= 0:
-            self.board[hero_location[0]][hero_location[1]]['HP'] -= damage
-            self.board[hero_location[0]][hero_location[1]]['weapon'] = 0
+        if self.board[hero_location[0]][hero_location[1]]['weapon'] == 0:
+            self.board[hero_location[0]][hero_location[1]]['HP'] -= \
+                self.board[monster_location[0]][monster_location[1]]["HP"]
+            if self.board[hero_location[0]][hero_location[1]]['HP'] >= 0:
+                self.board[monster_location[0]][monster_location[1]]["HP"] = 0
         else:
-            self.board[hero_location[0]][hero_location[1]]["weapon"] = -damage
-        if self.board[hero_location[0]][hero_location[1]]["HP"] > 0:
+            damage = self.board[monster_location[0]][monster_location[1]]["HP"] - \
+                     self.board[hero_location[0]][hero_location[1]]["weapon"]
+            if damage > 0:
+                self.board[monster_location[0]][monster_location[1]]["HP"] -=\
+                    self.board[hero_location[0]][hero_location[1]]['weapon']
+                self.board[hero_location[0]][hero_location[1]]['weapon'] = 0
+            else:
+                self.board[monster_location[0]][monster_location[1]]["HP"] = 0
+                self.board[hero_location[0]][hero_location[1]]["weapon"] = -damage
+        if self.board[hero_location[0]][hero_location[1]]["HP"] > 0 and\
+                self.board[monster_location[0]][monster_location[1]]["HP"] == 0:
             self.counter -= 1
             self.board[monster_location[0]][monster_location[1]] = None
 
